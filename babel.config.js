@@ -1,16 +1,10 @@
 module.exports = {
   presets: [
     [
-      '@vue/app',
+      '@babel/preset-env',
       {
-        useBuiltIns: 'entry',
-        debug: false,
-        polyfills: [
-          'es6.promise',
-          'es6.symbol',
-          'es7.array.includes',
-          'es6.string.includes'
-        ]
+        useBuiltIns: 'usage',
+        corejs: 3
       }
     ]
   ],
@@ -23,13 +17,6 @@ module.exports = {
         style: true
       },
       'vant'
-    ],
-    [
-      'import',
-      {
-        libraryName: 'view-design',
-        libraryDirectory: 'src/components'
-      }
     ]
   ]
 }

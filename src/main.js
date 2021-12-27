@@ -3,26 +3,22 @@ import App from './App.vue'
 import Router from './router'
 import Store from './store'
 
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+import 'lib-flexible/flexible.js'
+
 import './assets/styles/index.less'
 import './assets/iconfonts/iconfont.css'
 
 import './plugins/vant'
 import components from './plugins/components'
-
-import 'lib-flexible/flexible.js'
 import api from './utils/http'
 import moment from 'vue-moment'
 import _ from 'lodash'
 
 import './components/common/MedSvg/index.js'
 
-import '@babel/polyfill'
-import Es6Promise from 'es6-promise'
-
 import Bridge from './utils/bridge.js'
-
-require('es6-promise').polyfill()
-Es6Promise.polyfill()
 
 Vue.prototype.$bridge = Bridge
 

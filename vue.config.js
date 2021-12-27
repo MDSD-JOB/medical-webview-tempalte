@@ -33,7 +33,7 @@ module.exports = {
   },
   transpileDependencies: ['node_modules/webpack-dev-server/client'],
   chainWebpack: config => {
-    config.entry.app = ['@babel/polyfill', './src/main.js']
+    config.entry.app = ['./src/main.js']
     config.module
       .rule('compile')
       .test(/\.js$/)
