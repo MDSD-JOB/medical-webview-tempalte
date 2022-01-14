@@ -56,47 +56,20 @@ module.exports = {
         ]
       })
     config.resolve.symlinks(true)
-    // config.module
-    //   .rule('svg')
-    //   .exclude.add(resolve('src/assets/svg'))
-    //   .end()
-    // config.module
-    //   .rule('icons')
-    //   .test(/\.svg$/)
-    //   .include.add(resolve('src/assets/svg'))
-    //   .end()
-    //   .use('svg-sprite-loader')
-    //   .loader('svg-sprite-loader')
-    //   .options({
-    //     symbolId: 'icon-[name]'
-    //   })
-    //   .end()
+    config.module
+      .rule('svg')
+      .exclude.add(resolve('src/assets/icons'))
+      .end()
 
-    const svgRule = config.module.rule('svg')
-    svgRule.uses.clear()
-    svgRule.exclude.add(/node_modules/)
-    svgRule.exclude.add(resolve('src/assets/iconfont'))
-    svgRule.include.add(resolve('src/assets/icons'))
-    svgRule
+    config.module
+      .rule('icons')
       .test(/\.svg$/)
+      .include.add(resolve('src/assets/icons'))
+      .end()
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
       .options({
         symbolId: 'icon-[name]'
-      })
-
-    const imagesRule = config.module.rule('images')
-    imagesRule.exclude.add(resolve('src/assets/icons'))
-    imagesRule
-      .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
-      .use('image-webpack-loader')
-      .loader('image-webpack-loader')
-      .options({
-        mozjpeg: { progressive: true, quality: 65 },
-        optipng: { enabled: false },
-        pngquant: { quality: '65-90', speed: 4 },
-        gifsicle: { interlaced: false },
-        webp: { quality: 75 }
       })
 
     config
