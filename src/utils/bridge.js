@@ -1,41 +1,52 @@
-function setupWebViewJavascriptBridge(name, data, callback) {
-  if (window.bridge) {
-    window.bridge.callHandler(name, data, callback)
-    return
-  }
+/* eslint-disable */
+function setupWebViewJavascriptBridge(callback) {
   if (window.WebViewJavascriptBridge) {
-    return callback(window.WebViewJavascriptBridge)
+    return callback(WebViewJavascriptBridge);
+  } else {
+    document.addEventListener(
+      "WebViewJavascriptBridgeReady",
+      function() {
+        callback(WebViewJavascriptBridge);
+      },
+      false
+    );
+    if (window.WVJBCallbacks) {
+      return window.WVJBCallbacks.push(callback);
+    }
+    window.WVJBCallbacks = [callback];
+    var WVJBIframe = document.createElement("iframe");
+    WVJBIframe.style.display = "none";
+    WVJBIframe.src = "https://__bridge_loaded__";
+    document.documentElement.appendChild(WVJBIframe);
+    setTimeout(function() {
+      document.documentElement.removeChild(WVJBIframe);
+    }, 0);
   }
-  if (window.WVJBCallbacks) {
-    return window.WVJBCallbacks.push(callback)
-  }
-  window.WVJBCallbacks = [callback]
-  const WVJBIframe = document.createElement('iframe')
-  WVJBIframe.style.display = 'none'
-  WVJBIframe.src = 'https://__BRIDGE_LOADED__'
-  document.documentElement.appendChild(WVJBIframe)
-  setTimeout(() => {
-    document.documentElement.removeChild(WVJBIframe)
-  }, 0)
 }
 
+//初始化
+setupWebViewJavascriptBridge(function(bridge) {
+  try {
+    bridge.init(function(message, callback) {
+      callback(null);
+    });
+  } catch (e) {}
+});
+
 export default {
-  callhandler(name, data, callback) {
-    setupWebViewJavascriptBridge(name, data, function(bridge) {
-      if (!window.bridge) {
-        window.bridge = bridge
-      }
-      window.bridge.callHandler(name, data, callback)
-    })
-  },
-  registerhandler(name, callback) {
+  //js调APP方法 （参数分别为:app提供的方法名  传给app的数据  回调）
+  callhandler: function(method, params, callback) {
     setupWebViewJavascriptBridge(function(bridge) {
-      if (!window.bridge) {
-        window.bridge = bridge
-      }
-      window.bridge.registerHandler(name, function(data, responseCallback) {
-        callback(data, responseCallback)
-      })
-    })
+      bridge.callHandler(method, params, callback);
+    });
+  },
+
+  // APP调js方法 （参数分别为:js提供的方法名  回调）
+  registerHandler(method, callback) {
+    setupWebViewJavascriptBridge(bridge => {
+      bridge.registerHandler(method, (data, responseCallback) => {
+        callback(data, responseCallback);
+      });
+    });
   }
-}
+};
