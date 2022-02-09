@@ -11,6 +11,14 @@ export default {
       active: 'task',
       isLoaded: false
     }
+  },
+  created() {
+    this.gg()
+  },
+  methods: {
+    async gg() {
+      await console.log(111)
+    }
   }
 }
 </script>
