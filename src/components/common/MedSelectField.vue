@@ -3,12 +3,20 @@
     <van-field v-bind="$props" v-model="cValue">
       <template #right-icon>
         <div class="med-select-button">
-          <van-button @click="showPopover = true">候选项</van-button>
-          <van-action-sheet
+          <van-button @click="onSelectClick">候选项</van-button>
+          <van-popover
+            v-model="showPopover"
+            placement="left-start"
+            :actions="list"
+            close-on-click-action
+            @select="onSelect"
+            get-container="body"
+          />
+          <!-- <van-action-sheet
             v-model="showPopover"
             :actions="list"
             @select="onSelect"
-          />
+          /> -->
         </div>
       </template>
     </van-field>
@@ -47,6 +55,9 @@ export default {
       this.cValue = action.name
       this.unitKey = action
       this.showPopover = false
+    },
+    onSelectClick() {
+      this.showPopover = true
     }
   },
   watch: {

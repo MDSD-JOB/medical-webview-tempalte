@@ -24,8 +24,11 @@ export default {
   props: {
     ...T.props,
     fValue: {
-      require: true,
-      type: [String, Object]
+      type: [String, Object],
+      default: () => ({
+        value: '',
+        unit: ''
+      })
     },
     list: {
       require: true,
@@ -39,15 +42,23 @@ export default {
   },
   data() {
     return {
-      cValue: this.fValue.value || '',
-      unit: this.fValue.unit || '',
+      cValue: this.fValue.value,
+      unit: '',
+      unitKey: '',
       showPopover: false
+    }
+  },
+  created() {
+    this.unitKey = this.fValue.unit
+    if (this.fValue && this.list.length) {
+      const obj = this.list.find(item => item.value === this.fValue.unit)
+      this.unit = obj ? obj.name : ''
     }
   },
   methods: {
     onSelect(action) {
-      this.unit = action.name
       this.unitKey = action
+      this.unit = action.name
       this.showPopover = false
     }
   },

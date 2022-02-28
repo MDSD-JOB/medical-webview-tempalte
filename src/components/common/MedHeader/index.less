@@ -1,0 +1,37 @@
+.med-header-wrapper {
+  height: 100px;
+  .van-nav-bar {
+    height: 100px;
+    background: #444fdb;
+    background: linear-gradient(45deg, rgb(51, 59, 210), rgb(88, 102, 235));
+    color: #fff;
+    &.van-hairline--bottom::after {
+      border-bottom: none;
+      border-bottom-width: 0;
+      display: none;
+    }
+    .van-icon-arrow-left,
+    .van-nav-bar__text {
+      font-size: 36px;
+      color: #fff;
+    }
+    .van-nav-bar__title {
+      font-size: 36px;
+      color: #fff;
+    }
+    .van-nav-bar__content {
+      font-size: 36px;
+      height: 100px;
+    }
+  }
+  &&-wide {
+    height: 120px;
+    .van-nav-bar {
+      height: 180px;
+      box-shadow: 0 12px 20px rgb(51 59 210 / 30%);
+      .van-nav-bar__content {
+        height: 120px;
+      }
+    }
+  }
+}
