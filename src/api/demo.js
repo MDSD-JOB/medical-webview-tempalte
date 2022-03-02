@@ -1,5 +1,13 @@
 import axios from '@utils/http/api'
 
+export const getApiTmplate = params => {
+  return axios({
+    url: '/getTmplate',
+    method: 'get',
+    param: params
+  })
+}
+
 export const getTmplate = params => {
   return axios({
     url: '/dic/getTmplate',
@@ -16,4 +24,4 @@ export const postTmplate = params => {
   })
 }
 
-export default { getTmplate, postTmplate }
+export default { getApiTmplate, getTmplate, postTmplate }

@@ -6,25 +6,23 @@
 
 <script>
 export default {
+  name: 'Hello',
   data() {
-    return {
-      active: 'task',
-      isLoaded: false
-    }
+    return {}
   },
   created() {
     this.gg()
   },
   methods: {
     async gg() {
-      await console.log(111)
+      // 请求接口DEMO
+      // await this.$api.demo.getApiTmplate()
+      // await this.$api.demo.getTmplate()
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.hello-index-wrapper {
-  width: 100%;
-}
+@import "@assets/styles/hello/index.less";
 </style>

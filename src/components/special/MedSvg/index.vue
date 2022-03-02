@@ -1,25 +1,24 @@
 <template>
-  <svg :class="svgClass" aria-hidden="true" v-if="iconName">
-    <use :xlink:href="iconName" />
+  <svg :class="svgClass" aria-hidden="true">
+    <use :xlink:href="iconName"></use>
   </svg>
 </template>
 
 <script>
 export default {
-  name: 'SvgIcon',
+  name: 'svg-icon',
   props: {
-    name: {
+    iconClass: {
       type: String,
       required: true
     },
     className: {
-      type: String,
-      default: ''
+      type: String
     }
   },
   computed: {
     iconName() {
-      return `#icon-${this.name}`
+      return `#icon-${this.iconClass}`
     },
     svgClass() {
       if (this.className) {
@@ -34,12 +33,10 @@ export default {
 
 <style scoped>
 .svg-icon {
-  /* width: 1em;//svg的大小，根据需要改变
-    height: 1em; */
-  width: 100%;
-  height: 100%;
+  width: 1em;
+  height: 1em;
   vertical-align: -0.15em;
   fill: currentColor;
-  overflow: auto;
+  overflow: hidden;
 }
 </style>

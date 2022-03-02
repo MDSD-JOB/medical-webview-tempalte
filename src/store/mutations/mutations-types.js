@@ -1,1 +1,1 @@
-export const SET_AIDFORM = 'SET_AIDFORM'
+export const SET_FORM = 'SET_FORM'

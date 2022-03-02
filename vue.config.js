@@ -117,29 +117,19 @@ module.exports = {
   runtimeCompiler: true,
   productionSourceMap: !IS_PROD,
   parallel: require('os').cpus().length > 1,
-  pwa: {},
-
   devServer: {
     open: true,
-    hotOnly: true,
-    proxy: {
-      '/dic': {
-        target: 'http://192.168.0.96:8092',
-        ws: false,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/dic': ''
-        }
-      },
-      '/api': {
-        target: 'http://192.168.0.96:49152/',
-        changeOrigin: true,
-        ws: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
-    }
+    hotOnly: true
+    //   proxy: {
+    //     '/api': {
+    //       target: 'http://127.0.0.1/',
+    //       changeOrigin: true,
+    //       ws: true,
+    //       pathRewrite: {
+    //         '^/api': ''
+    //       }
+    //     }
+    //   }
   },
 
   pluginOptions: {

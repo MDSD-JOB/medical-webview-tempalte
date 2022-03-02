@@ -12,11 +12,11 @@ import './assets/iconfonts/iconfont.css'
 
 import './plugins/vant'
 import components from './plugins/components'
+import './components/special/MedSvg'
+
 import api from './utils/http'
 import moment from 'vue-moment'
 import _ from 'lodash'
-
-import './components/common/MedSvg/index.js'
 
 import Bridge from './utils/bridge.js'
 

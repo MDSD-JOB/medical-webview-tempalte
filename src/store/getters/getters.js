@@ -1,5 +1,5 @@
 export default {
-  aidForm(state) {
-    return state.aidForm
+  form(state) {
+    return state.form
   }
 }

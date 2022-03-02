@@ -1,4 +1,4 @@
-import apiList from '@config/api'
+import apiList from '@/api'
 
 const install = Vue => {
   if (install.installed) return

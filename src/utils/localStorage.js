@@ -1,26 +1,26 @@
 import WebStorageCache from 'web-storage-cache'
 
 const wsCache = new WebStorageCache()
-export function setLocalStorage(key, value) {
+export const setLocalStorage = (key, value) => {
   return wsCache.set(key, value)
 }
 
-export function getLocalStorage(key) {
+export const getLocalStorage = key => {
   return wsCache.get(key)
 }
 
-export function removeLocalStorage(key) {
+export const removeLocalStorage = key => {
   return wsCache.delete(key)
 }
 
-export function clearLocalStorage() {
+export const clearLocalStorage = () => {
   return wsCache.clear()
 }
 
-export function getLocale() {
+export const getLocale = () => {
   return getLocalStorage('locale')
 }
 
-export function saveLocale(locale) {
+export const saveLocale = locale => {
   return setLocalStorage('locale', locale)
 }

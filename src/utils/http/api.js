@@ -1,8 +1,17 @@
 import axios from 'axios'
-import config from './config.js'
 import qs from 'qs'
 import { Notify } from 'vant'
-
+const config = {
+  method: 'get',
+  baseURL: window.GLOBAL_APP_API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8'
+  },
+  data: {},
+  timeout: 10000,
+  withCredentials: false,
+  responseType: 'json'
+}
 const isProd = ['prod', 'production'].includes(process.env.NODE_ENV)
 export default function $axios(options) {
   return new Promise((resolve, reject) => {
@@ -14,18 +23,18 @@ export default function $axios(options) {
 
     instance.interceptors.request.use(
       config => {
+        // TODO: 文件上传接口统一
         if (config.url.startsWith('/files')) {
           config.headers['Conten-Type'] = 'multipart/form-data;charse=UTF-8'
-          config.url = config.url.slice(6)
         } else {
           config.headers['Conten-Type'] = 'application/json;charset=utf-8'
         }
-        if (config.url.startsWith('/dic')) {
-          config.baseURL = isProd ? process.env.VUE_APP_API_DIC_URL : '/'
-          config.url = isProd ? config.url.slice(4) : config.url
-        } else {
-          config.baseURL = isProd ? process.env.VUE_APP_API_BASE_URL : '/api'
+
+        //  TODO: 调取字典表接口统一
+        if (config.url && config.url.substring(0, 5) === '/dic/') {
+          config.baseURL = window.GLOBAL_APP_API_DIC_URL
         }
+
         if (
           config.method.toLocaleLowerCase() === 'get' ||
           config.method.toLocaleLowerCase() === 'put' ||
