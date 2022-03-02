@@ -3,7 +3,7 @@ import qs from 'qs'
 import { Notify } from 'vant'
 const config = {
   method: 'get',
-  baseURL: window.GLOBAL_APP_API_BASE_URL,
+  baseURL: window.GLOBAL_APP_API_BASE_URL || process.env.VUE_APP_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8'
   },
