@@ -2,12 +2,7 @@ const AutoPrefixer = require("autoprefixer");
 const px2rem = require("postcss-px2rem-exclude");
 module.exports = ({ file }) => {
   let remUnit;
-  if (
-    file &&
-    file.dirname &&
-    (file.dirname.indexOf("vant") > -1 ||
-      file.dirname.indexOf("view-design") > -1)
-  ) {
+  if (file && file.dirname && file.dirname.indexOf("vant") > -1) {
     remUnit = 37.5;
   } else {
     remUnit = 75;

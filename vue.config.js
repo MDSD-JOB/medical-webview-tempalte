@@ -8,10 +8,12 @@ const resolve = dir => path.join(__dirname, dir)
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
 
 module.exports = {
+  // 输出文件目录
   publicPath: IS_PROD ? './' : '/',
+  // 'dist', 生产环境构建文件的目录
   outputDir: process.env.outputDir || 'dist',
+  // 相对于outputDir的静态资源(js、css、img、fonts)目录
   assetsDir: '',
-
   configureWebpack: config => {
     const plugins = []
     if (IS_PROD) {
@@ -31,31 +33,28 @@ module.exports = {
 
     config.plugins = [...config.plugins, ...plugins]
   },
-  transpileDependencies: ['node_modules/webpack-dev-server/client'],
   chainWebpack: config => {
     config.entry.app = ['./src/main.js']
+
+    // 修复HMR
+    config.resolve.symlinks(true)
+
     config.module
-      .rule('compile')
-      .test(/\.js$/)
-      .include.add(resolve('src'))
-      .add(resolve('test'))
-      .add(resolve('static'))
-      .add(resolve('node_modules/webpack-dev-server/client'))
-      .add(resolve('node_modules'))
+      .rule('js')
+      .test(/\.(js|jsx)$/)
+      .exclude.add([/@babel(?:\/|\\{1,2})runtime|core-js/])
       .end()
-      .use('babel')
+      .use('babel-loader')
       .loader('babel-loader')
       .options({
-        presets: [
-          [
-            '@babel/preset-env',
-            {
-              modules: false
-            }
-          ]
-        ]
+        babelrc: false,
+        configFile: path.resolve(__dirname, 'babel.config.js'),
+        compact: false,
+        cacheDirectory: true,
+        sourceMaps: false
       })
-    config.resolve.symlinks(true)
+      .end()
+
     config.module
       .rule('svg')
       .exclude.add(resolve('src/assets/icons'))
@@ -72,12 +71,6 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
 
-    config
-      .plugin('ignore')
-      .use(
-        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn$/)
-      )
-
     config.resolve.alias
       .set('vue$', 'vue/dist/vue.esm.js')
       .set('@$', resolve('src'))
@@ -90,6 +83,12 @@ module.exports = {
       .set('@store', resolve('src/store'))
       .set('@mixins', resolve('src/mixins'))
 
+    config
+      .plugin('ignore')
+      .use(
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn$/)
+      )
+
     if (process.env.IS_ANALYZ) {
       config.plugin('webpack-report').use(BundleAnalyzerPlugin, [
         {
@@ -101,9 +100,9 @@ module.exports = {
     if (IS_PROD) {
       config.optimization.delete('splitChunks')
     }
+
     return config
   },
-
   css: {
     modules: false,
     extract: IS_PROD,
@@ -112,31 +111,18 @@ module.exports = {
       css: {}
     }
   },
-
+  // Babel 显式转译一个依赖，可以在 transpileDependencies选项中列出来
+  transpileDependencies: [],
   lintOnSave: true,
-  runtimeCompiler: true,
   productionSourceMap: !IS_PROD,
-  parallel: require('os').cpus().length > 1,
   devServer: {
     open: true,
     hotOnly: true
-    //   proxy: {
-    //     '/api': {
-    //       target: 'http://127.0.0.1/',
-    //       changeOrigin: true,
-    //       ws: true,
-    //       pathRewrite: {
-    //         '^/api': ''
-    //       }
-    //     }
-    //   }
   },
-
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'less',
       patterns: [path.resolve(__dirname, 'src/assets/styles/variables.less')]
     }
-    // vconsole: { enable: true }
   }
 }
