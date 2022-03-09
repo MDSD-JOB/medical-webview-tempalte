@@ -1,9 +1,9 @@
 import * as types from './mutations-types'
-import { setLocalStorage } from '@utils/localStorage'
+import storage from 'store'
 
 export default {
   [types.SET_FORM](state, data) {
-    setLocalStorage('form', data)
+    storage.set('form', data)
     state.form = data
   }
 }

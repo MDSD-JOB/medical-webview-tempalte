@@ -17,12 +17,14 @@ import api from './utils/http'
 import './plugins/vant'
 import './components/special/MedSvg'
 import components from './plugins/components'
+import storage from 'store'
 
 import './assets/styles/index.less'
 import './assets/iconfonts/iconfont.css'
-Vue.prototype.$bridge = Bridge
 
+Vue.prototype.$bridge = Bridge
 Vue.prototype._ = _
+Vue.prototype._storage = storage
 
 Vue.use(moment)
 Vue.use(components)
