@@ -1,0 +1,23 @@
+.med-hint-field-wrapper {
+  .van-cell__title.van-field__label {
+    width: auto;
+    margin-right: 20px;
+  }
+  &.no-link-arrow {
+    .van-field__left-icon {
+      margin-right: 10px;
+      .van-icon-warning {
+        color: orange;
+      }
+      .van-icon-success {
+        color: green;
+      }
+      .van-icon-cross {
+        color: red;
+      }
+    }
+    .van-icon.van-icon-arrow {
+      display: none; // 去除link状态下右箭头
+    }
+  }
+}

@@ -32,7 +32,7 @@ const selfProps = (defaultProps = {}) => {
         type: String,
         default: ''
       },
-      fixed: {
+      isFixed: {
         required: false,
         type: Boolean,
         default: true
@@ -61,15 +61,19 @@ export default {
   render() {
     const { $attrs, $scopedSlots } = this
     const TProps = {
-      props: getOptionProps(this),
+      class: getClass(this),
+      style: getStyle(this)
+    }
+    const ChildProps = {
+      attrs: $attrs,
+      props: {
+        ...getOptionProps(this)
+      },
       on: {
         ...getListeners(this),
         'click-left': this.onClickLeft,
         'click-right': this.onClickRight
       },
-      attrs: $attrs,
-      class: getClass(this),
-      style: getStyle(this),
       scopedSlots: $scopedSlots
     }
     const bodySlots = Object.keys(this.$slots).map(slot => {
@@ -80,10 +84,14 @@ export default {
       <div
         class={{
           'med-header-wrapper': true,
-          'med-header-wrapper-wide': this.wide
+          'med-header-wrapper-wide': this.wide,
+          'med-header-fixed': this.isFixed
         }}
+        {...TProps}
       >
-        <van-nav-bar {...TProps}>{bodySlots}</van-nav-bar>
+        <van-nav-bar class="med-header-nav-bar" {...ChildProps}>
+          {bodySlots}
+        </van-nav-bar>
       </div>
     )
   }
