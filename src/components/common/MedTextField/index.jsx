@@ -6,7 +6,7 @@ import {
   getListeners,
   getOptionProps
 } from '../../_utils/props-util'
-import MedHintFiled from './../MedHintField'
+import MedHintFiled from '../MedHintField'
 
 const selfProps = (defaultProps = {}) => {
   return initDefaultProps(
@@ -34,7 +34,7 @@ const selfProps = (defaultProps = {}) => {
   )
 }
 export default {
-  name: 'MedNumberField',
+  name: 'MedTextField',
   inheritAttrs: false,
   components: {
     MedHintFiled
@@ -56,14 +56,6 @@ export default {
     },
     inputHandler(value) {
       const valArr = value.split('.')
-      if (this.max !== undefined) {
-        value = Math.min(value, Number(this.max))
-        this.$emit('_change', value)
-      }
-      if (this.min !== undefined) {
-        value = Math.max(value, Number(this.min))
-        this.$emit('_change', value)
-      }
       if (this.scale !== undefined) {
         if (valArr.length > 1) {
           let pointLength = valArr[1].length
@@ -81,11 +73,19 @@ export default {
         }
         this.$emit('_change', value)
       }
+      if (this.max !== undefined) {
+        value = Math.min(value, Number(this.max))
+        this.$emit('_change', value)
+      }
+      if (this.min !== undefined) {
+        value = Math.max(value, Number(this.min))
+        this.$emit('_change', value)
+      }
     }
   },
   watch: {
     fieldValue(val) {
-      this.$emit('_change', val)
+      this.$emit('_change', Number(val))
     }
   },
   render() {
@@ -114,13 +114,12 @@ export default {
     return (
       <div
         class={{
-          'med-number-field-wrapper': true
+          'med-text-field-wrapper': true
         }}
         {...TProps}
       >
         <med-hint-field
           class="no-link-arrow"
-          type="number"
           v-model={this.fieldValue}
           {...ChildProps}
         >

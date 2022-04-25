@@ -46,7 +46,7 @@ const selfProps = (defaultProps = {}) => {
       },
       formatter: {
         required: false,
-        default: 'YYYY-MM-DD HH:mm'
+        default: ''
       },
       minDate: {
         required: false,
@@ -84,12 +84,16 @@ export default {
   data() {
     return {
       show: false,
-      childTime: this.dateTime
+      childTime: ''
     }
   },
   computed: {
+    format() {
+      if (this.formatter) return this.formatter
+      return this.type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
+    },
     dateValue() {
-      return this.string2Date(this.value)
+      return this.dateTime ? new Date(this.dateTime) : new Date()
     },
     _minDate() {
       if (!this.minDate) return undefined
@@ -100,20 +104,21 @@ export default {
       return this.$moment(this.maxDate).toDate()
     }
   },
+  created() {
+    this.childTime = this.dateTime
+      ? this.$moment(this.dateTime).format(this.format)
+      : ''
+  },
   updated() {
     this.childTime = this.dateTime
+      ? this.$moment(this.dateTime).format(this.format)
+      : ''
   },
   methods: {
     showPicker() {
       if (!this.disabled) {
         this.show = true
       }
-    },
-    date2String(date) {
-      return this.$moment(date).format(this.formatter)
-    },
-    string2Date(str) {
-      return str ? new Date(str) : new Date()
     },
     handleShowList() {
       if (!this.readonly && !this.disabled) {
@@ -125,7 +130,7 @@ export default {
     },
     onConfirm(val) {
       this.show = false
-      this.childTime = this.date2String(val)
+      this.childTime = this.$moment(val).format(this.format)
     },
     onChange(val) {
       this.$emit('change', val)
@@ -146,6 +151,14 @@ export default {
     },
     showHint(val) {
       this.$refs.hintField.showHint(val)
+    },
+    clear(e) {
+      e.stopPropagation()
+      this.childTime = ''
+    },
+    nowTime(e) {
+      e.stopPropagation()
+      this.childTime = this.$moment(new Date()).format(this.format)
     }
   },
   watch: {
@@ -166,8 +179,7 @@ export default {
         disabled: this.disabled,
         rules: this.rules,
         hintType: this.hintType,
-        hintMessage: this.hintMessage,
-        clearable: this.clearable
+        hintMessage: this.hintMessage
       },
       on: {
         click: this.showPicker
@@ -180,7 +192,7 @@ export default {
         maxDate: this._maxDate,
         filter: this.filter,
         formatter: this.formatters,
-        value: this.dateValue
+        value: new Date(this.dateValue)
       },
       on: {
         ...getListeners(this),
@@ -209,6 +221,21 @@ export default {
           v-model={this.childTime}
           {...TProps}
         >
+          <template slot={'right-icon'}>
+            <div class="icons">
+              <van-icon
+                name="clock-o"
+                class="clear-icon"
+                onClick={e => this.nowTime(e)}
+              />
+              <van-icon
+                name="clear"
+                vShow={this.clearable && this.childTime}
+                class="clear-icon"
+                onClick={e => this.clear(e)}
+              />
+            </div>
+          </template>
           {bodySlots}
         </med-hint-field>
 

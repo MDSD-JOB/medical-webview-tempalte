@@ -12,6 +12,10 @@ const selfProps = (defaultProps = {}) => {
   return initDefaultProps(
     {
       ...T.props,
+      value: {
+        type: [String, Number, Date],
+        default: ''
+      },
       placeholder: {
         type: String,
         default: ''
