@@ -5,6 +5,7 @@ import defaultState from './state/state'
 import mutations from './mutations/mutations'
 import getters from './getters/getters'
 import actions from './actions/actions'
+import modules from './modules'
 
 Vue.use(Vuex)
 
@@ -13,6 +14,7 @@ export default () => {
   return new Vuex.Store({
     strict: IS_PROD,
     state: defaultState,
+    modules,
     mutations,
     actions,
     getters

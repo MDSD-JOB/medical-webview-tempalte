@@ -6,6 +6,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 
 const resolve = dir => path.join(__dirname, dir)
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
+const IS_TEST = ['test'].includes(process.env.NODE_ENV)
 
 module.exports = {
   // 输出文件目录
@@ -16,21 +17,13 @@ module.exports = {
   assetsDir: '',
   configureWebpack: config => {
     const plugins = []
-    if (IS_PROD) {
-      plugins.push(
-        new TerserPlugin({
-          terserOptions: {
-            compress: {
-              warnings: false,
-              drop_console: true,
-              drop_debugger: true,
-              pure_funcs: ['console.log']
-            }
-          }
-        })
-      )
+    if (IS_TEST) {
+      return {
+        devtool: 'nosources-source-map'
+      }
     }
 
+    config.devtool = IS_PROD ? false : 'source-map'
     config.plugins = [...config.plugins, ...plugins]
   },
   chainWebpack: config => {
@@ -98,7 +91,52 @@ module.exports = {
     }
 
     if (IS_PROD) {
-      config.optimization.delete('splitChunks')
+      config.optimization.splitChunks({
+        cacheGroups: {
+          utils: {
+            name: 'chunk-utils',
+            test: /[\\/]src[\\/](components|utils|services)/,
+            priority: 8,
+            chunks: 'all',
+            minChunks: 2
+          },
+          commons: {
+            name: 'chunk-commons',
+            test: /[\\/]src/,
+            priority: 4,
+            chunks: 'all',
+            minChunks: 2
+          },
+          libs: {
+            name: 'chunk-libs',
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10,
+            chunks: 'all'
+          },
+          vantUI: {
+            name: 'chunk-vantUI',
+            test: /[\\/]node_modules[\\/]vant[\\/]/,
+            priority: 20
+          }
+        }
+      })
+      config.optimization.minimizer([
+        new TerserPlugin({
+          // 多进程
+          parallel: true,
+          sourceMap: !IS_PROD,
+          terserOptions: {
+            ecma: 5,
+            warnings: false,
+            parse: {},
+            compress: {
+              drop_console: true,
+              drop_debugger: true,
+              pure_funcs: ['console.log']
+            }
+          }
+        })
+      ])
     }
 
     return config
@@ -114,6 +152,7 @@ module.exports = {
   // Babel 显式转译一个依赖，可以在 transpileDependencies选项中列出来
   transpileDependencies: [],
   lintOnSave: true,
+  // 控制是否在生产环境下生成map文件
   productionSourceMap: !IS_PROD,
   devServer: {
     open: true,

@@ -10,7 +10,9 @@ export default [
         name: 'hello',
         path: '/hello',
         component: resolve =>
-          import('@views/hello/index').then(module => resolve(module))
+          import(/* webpackMode: "eager" */ '@views/hello/index').then(module =>
+            resolve(module)
+          )
       }
     ]
   }
